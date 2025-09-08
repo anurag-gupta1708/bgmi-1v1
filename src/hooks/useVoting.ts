@@ -34,7 +34,7 @@ export const useVoting = () => {
     ["bgmi-votes","bgmi-bets","bgmi-user-vote","bgmi-user-bet","bgmi-user-votes","bgmi-user-bets"]
       .forEach(k => localStorage.removeItem(k));
 
-    const savedVoterName = localStorage.getItem("bgmi-voter-name") || "";
+    const savedVoterName = localStorage.getItem("voter-name") || "";
     if (savedVoterName) setVoterName(savedVoterName);
     refreshTotalsAndFeeds();
   }, []);
