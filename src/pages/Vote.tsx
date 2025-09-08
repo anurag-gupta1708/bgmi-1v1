@@ -198,7 +198,7 @@ const Vote = () => {
         {/* Voting Cards */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           <PlayerCard
-            name="Player Dhol"
+            name="Player Deepak"
             image={player1Avatar}
             votes={votes.player1Votes}
             percentage={player1Percentage}
@@ -209,7 +209,7 @@ const Vote = () => {
           />
           
           <PlayerCard
-            name="Player Yeti"
+            name="Player Eshank"
             image={player2Avatar}
             votes={votes.player2Votes}
             percentage={player2Percentage}
