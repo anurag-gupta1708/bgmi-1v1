@@ -8,6 +8,7 @@ import player1Avatar from '@/assets/WhatsApp Image 2025-09-08 at 15.03.01_a69b91
 import player2Avatar from '@/assets/WhatsApp Image 2025-09-08 at 15.03.01_6f972a29.jpg';
 
 const Vote = () => {
+  
   const { votes, bets, hasVoted, hasBet, voterName, vote, placeBet, setVoterNameAndSave, getPercentage, getBettingPercentage } = useVoting();
   const [tempName, setTempName] = useState('');
   const [betAmount, setBetAmount] = useState('');

@@ -46,14 +46,14 @@ export const useVoting = () => {
       setVotes(JSON.parse(savedVotes));
     } else {
       // Initialize with some sample votes
-      setVotes({ player1Votes: 45, player2Votes: 38 });
+      setVotes({ player1Votes: 0, player2Votes: 0 });
     }
 
     if (savedBets) {
       setBets(JSON.parse(savedBets));
     } else {
       // Initialize with some sample bets
-      setBets({ player1Bets: 1250, player2Bets: 890 });
+      setBets({ player1Bets: 0, player2Bets: 0 });
     }
     
     if (savedUserVote) {
