@@ -82,7 +82,7 @@ const Results = () => {
               <div className="relative">
                 <img 
                   src={player1Avatar} 
-                  alt="Dhol" 
+                  alt="Deepak" 
                   className="w-16 h-16 rounded-full border-2 border-primary"
                 />
                 {isPlayer1Winning && !isTied && (
@@ -92,7 +92,7 @@ const Results = () => {
                 )}
               </div>
               <div>
-                <h3 className="font-orbitron font-bold text-xl glow-text-green">Dhol</h3>
+                <h3 className="font-orbitron font-bold text-xl glow-text-green">Deepak</h3>
                 <p className="text-muted-foreground text-sm">boobies vala</p>
               </div>
             </div>
@@ -146,7 +146,7 @@ const Results = () => {
               <div className="relative">
                 <img 
                   src={player2Avatar} 
-                  alt="yeti" 
+                  alt="Eshank" 
                   className="w-16 h-16 rounded-full border-2 border-secondary"
                 />
                 {!isPlayer1Winning && !isTied && (
@@ -156,7 +156,7 @@ const Results = () => {
                 )}
               </div>
               <div>
-                <h3 className="font-orbitron font-bold text-xl glow-text-orange">Yeti</h3>
+                <h3 className="font-orbitron font-bold text-xl glow-text-orange">Eshank</h3>
                 <p className="text-muted-foreground text-sm">chuche vala</p>
               </div>
             </div>
