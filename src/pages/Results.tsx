@@ -4,14 +4,19 @@ import player1Avatar from '@/assets/player1-avatar.jpg';
 import player2Avatar from '@/assets/player2-avatar.jpg';
 
 const Results = () => {
-  const { votes, getTotalVotes, getPercentage } = useVoting();
+  const { votes, bets, getTotalVotes, getTotalBets, getPercentage, getBettingPercentage } = useVoting();
   
   const totalVotes = getTotalVotes();
+  const totalBets = getTotalBets();
   const player1Percentage = getPercentage(votes.player1Votes);
   const player2Percentage = getPercentage(votes.player2Votes);
+  const player1BetPercentage = getBettingPercentage(bets.player1Bets);
+  const player2BetPercentage = getBettingPercentage(bets.player2Bets);
   
   const isPlayer1Winning = votes.player1Votes > votes.player2Votes;
+  const isPlayer1WinningBets = bets.player1Bets > bets.player2Bets;
   const isTied = votes.player1Votes === votes.player2Votes;
+  const isBetsTied = bets.player1Bets === bets.player2Bets;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
@@ -29,18 +34,38 @@ const Results = () => {
 
         {/* Winner Announcement */}
         {totalVotes > 0 && (
-          <div className="mb-12">
+          <div className="mb-8">
             <div className="gaming-card p-8 text-center max-w-2xl mx-auto">
               <div className="flex justify-center mb-4">
                 <Trophy className="w-16 h-16 text-primary" />
               </div>
               <h2 className="font-orbitron font-bold text-2xl mb-2">
-                {isTied ? 'IT\'S A TIE!' : `${isPlayer1Winning ? 'PLAYER ALPHA' : 'PLAYER BETA'} LEADS!`}
+                {isTied ? 'IT\'S A TIE!' : `${isPlayer1Winning ? 'PLAYER ALPHA' : 'PLAYER BETA'} LEADS VOTES!`}
               </h2>
               <p className="text-muted-foreground font-rajdhani">
                 {isTied 
-                  ? 'Both players are neck and neck in this epic battle!'
+                  ? 'Both players are neck and neck in voting!'
                   : `Currently dominating with ${Math.max(player1Percentage, player2Percentage)}% of votes`
+                }
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Betting Winner Announcement */}
+        {totalBets > 0 && (
+          <div className="mb-12">
+            <div className="gaming-card p-6 text-center max-w-2xl mx-auto border-purple-500/30">
+              <div className="flex justify-center mb-4">
+                <div className="text-4xl">💰</div>
+              </div>
+              <h2 className="font-orbitron font-bold text-xl mb-2 glow-text-purple">
+                {isBetsTied ? 'BETTING IS TIED!' : `${isPlayer1WinningBets ? 'PLAYER ALPHA' : 'PLAYER BETA'} LEADS BETS!`}
+              </h2>
+              <p className="text-muted-foreground font-rajdhani">
+                {isBetsTied 
+                  ? 'Equal confidence in both players!'
+                  : `Attracting ${Math.max(player1BetPercentage, player2BetPercentage)}% of total bets (${Math.max(bets.player1Bets, bets.player2Bets)} total)`
                 }
               </p>
             </div>
@@ -80,13 +105,33 @@ const Results = () => {
               
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>Percentage</span>
+                  <span>Vote %</span>
                   <span className="font-bold">{player1Percentage}%</span>
                 </div>
                 <div className="w-full bg-muted rounded-full h-4">
                   <div
                     className="progress-bar-green h-4 rounded-full transition-all duration-1000"
                     style={{ width: `${player1Percentage}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="flex justify-between items-center">
+                <span className="font-rajdhani font-semibold">Bets</span>
+                <span className="font-orbitron font-bold text-xl text-purple-400">
+                  {bets.player1Bets}
+                </span>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Bet %</span>
+                  <span className="font-bold">{player1BetPercentage}%</span>
+                </div>
+                <div className="w-full bg-muted rounded-full h-4">
+                  <div
+                    className="progress-bar-purple h-4 rounded-full transition-all duration-1000"
+                    style={{ width: `${player1BetPercentage}%` }}
                   />
                 </div>
               </div>
@@ -124,7 +169,7 @@ const Results = () => {
               
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span>Percentage</span>
+                  <span>Vote %</span>
                   <span className="font-bold">{player2Percentage}%</span>
                 </div>
                 <div className="w-full bg-muted rounded-full h-4">
@@ -134,16 +179,42 @@ const Results = () => {
                   />
                 </div>
               </div>
+
+              <div className="flex justify-between items-center">
+                <span className="font-rajdhani font-semibold">Bets</span>
+                <span className="font-orbitron font-bold text-xl text-purple-400">
+                  {bets.player2Bets}
+                </span>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Bet %</span>
+                  <span className="font-bold">{player2BetPercentage}%</span>
+                </div>
+                <div className="w-full bg-muted rounded-full h-4">
+                  <div
+                    className="progress-bar-purple h-4 rounded-full transition-all duration-1000"
+                    style={{ width: `${player2BetPercentage}%` }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Overall Statistics */}
-        <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+        <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
           <div className="gaming-card p-6 text-center">
             <Users className="w-8 h-8 mx-auto mb-3 text-primary" />
             <div className="font-orbitron font-bold text-2xl mb-1">{totalVotes}</div>
             <div className="text-muted-foreground text-sm">Total Votes</div>
+          </div>
+
+          <div className="gaming-card p-6 text-center">
+            <div className="text-3xl mb-3">💰</div>
+            <div className="font-orbitron font-bold text-2xl mb-1">{totalBets}</div>
+            <div className="text-muted-foreground text-sm">Total Bets</div>
           </div>
           
           <div className="gaming-card p-6 text-center">
@@ -161,7 +232,7 @@ const Results = () => {
           </div>
         </div>
 
-        {totalVotes === 0 && (
+        {(totalVotes === 0 && totalBets === 0) && (
           <div className="text-center mt-8">
             <div className="gaming-card p-8 max-w-md mx-auto">
               <Target className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
@@ -170,7 +241,7 @@ const Results = () => {
                 Be the first to cast your vote in this epic battle!
               </p>
               <a href="/vote" className="gaming-button-green inline-block">
-                START VOTING
+                START VOTING & BETTING
               </a>
             </div>
           </div>

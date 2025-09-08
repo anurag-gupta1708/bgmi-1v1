@@ -8,8 +8,9 @@ import player1Avatar from '@/assets/player1-avatar.jpg';
 import player2Avatar from '@/assets/player2-avatar.jpg';
 
 const Vote = () => {
-  const { votes, hasVoted, voterName, vote, setVoterNameAndSave, getPercentage } = useVoting();
+  const { votes, bets, hasVoted, hasBet, voterName, vote, placeBet, setVoterNameAndSave, getPercentage, getBettingPercentage } = useVoting();
   const [tempName, setTempName] = useState('');
+  const [betAmount, setBetAmount] = useState('');
 
   const handleNameSubmit = () => {
     if (!tempName.trim()) {
@@ -44,8 +45,39 @@ const Vote = () => {
     });
   };
 
+  const handleBet = (player: 'player1' | 'player2') => {
+    const amount = parseInt(betAmount);
+    
+    if (hasBet) {
+      toast({
+        title: "Already Bet!",
+        description: "You have already placed your bet in this battle.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!amount || amount <= 0) {
+      toast({
+        title: "Invalid Amount!",
+        description: "Please enter a valid bet amount.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    placeBet(player, amount);
+    toast({
+      title: "Bet Placed!",
+      description: `Your bet of ${amount} for ${player === 'player1' ? 'Player Alpha' : 'Player Beta'} has been recorded.`,
+    });
+    setBetAmount('');
+  };
+
   const player1Percentage = getPercentage(votes.player1Votes);
   const player2Percentage = getPercentage(votes.player2Votes);
+  const player1BetPercentage = getBettingPercentage(bets.player1Bets);
+  const player2BetPercentage = getBettingPercentage(bets.player2Bets);
 
   // If no voter name is set, show name input form
   if (!voterName) {
@@ -108,8 +140,59 @@ const Vote = () => {
                 ✓ You voted for {hasVoted === 'player1' ? 'Player Alpha' : 'Player Beta'}
               </div>
             )}
+            {hasBet && (
+              <div className="block bg-blue-500/20 text-blue-400 px-4 py-2 rounded-lg border border-blue-500/30">
+                💰 You bet on {hasBet === 'player1' ? 'Player Alpha' : 'Player Beta'}
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Betting Section */}
+        {!hasBet && (
+          <div className="mb-8 max-w-2xl mx-auto">
+            <div className="gaming-card p-6">
+              <h3 className="font-orbitron font-bold text-xl mb-4 text-center">
+                <span className="glow-text-purple">PLACE YOUR BET</span>
+              </h3>
+              <p className="text-center text-muted-foreground mb-6 font-rajdhani">
+                Show your confidence! Bet on your favorite player
+              </p>
+              
+              <div className="space-y-4">
+                <div className="flex justify-center">
+                  <Input
+                    type="number"
+                    placeholder="Enter bet amount..."
+                    value={betAmount}
+                    onChange={(e) => setBetAmount(e.target.value)}
+                    className="max-w-xs text-center font-rajdhani text-lg"
+                    min="1"
+                  />
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <Button
+                    onClick={() => handleBet('player1')}
+                    disabled={!betAmount || parseInt(betAmount) <= 0}
+                    className="gaming-button-green font-orbitron font-bold py-3"
+                    size="lg"
+                  >
+                    💰 BET ON ALPHA
+                  </Button>
+                  <Button
+                    onClick={() => handleBet('player2')}
+                    disabled={!betAmount || parseInt(betAmount) <= 0}
+                    className="gaming-button-orange font-orbitron font-bold py-3"
+                    size="lg"
+                  >
+                    💰 BET ON BETA
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Voting Cards */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -141,35 +224,74 @@ const Vote = () => {
           <div className="gaming-card p-6">
             <h3 className="font-orbitron font-bold text-xl mb-6 text-center">Battle Statistics</h3>
             
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="font-rajdhani font-semibold">Total Votes</span>
-                <span className="font-orbitron font-bold">{votes.player1Votes + votes.player2Votes}</span>
+            <div className="space-y-6">
+              {/* Voting Stats */}
+              <div className="space-y-4">
+                <h4 className="font-rajdhani font-semibold text-lg text-center glow-text-green">🗳️ VOTING RESULTS</h4>
+                <div className="flex justify-between items-center">
+                  <span className="font-rajdhani font-semibold">Total Votes</span>
+                  <span className="font-orbitron font-bold">{votes.player1Votes + votes.player2Votes}</span>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="glow-text-green">Player Alpha</span>
+                    <span>{player1Percentage}%</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-3">
+                    <div
+                      className="progress-bar-green h-3 rounded-full transition-all duration-700"
+                      style={{ width: `${player1Percentage}%` }}
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="glow-text-orange">Player Beta</span>
+                    <span>{player2Percentage}%</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-3">
+                    <div
+                      className="progress-bar-orange h-3 rounded-full transition-all duration-700"
+                      style={{ width: `${player2Percentage}%` }}
+                    />
+                  </div>
+                </div>
               </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="glow-text-green">Player Alpha</span>
-                  <span>{player1Percentage}%</span>
+
+              {/* Betting Stats */}
+              <div className="space-y-4 border-t border-muted pt-4">
+                <h4 className="font-rajdhani font-semibold text-lg text-center glow-text-purple">💰 BETTING RESULTS</h4>
+                <div className="flex justify-between items-center">
+                  <span className="font-rajdhani font-semibold">Total Bets</span>
+                  <span className="font-orbitron font-bold">{bets.player1Bets + bets.player2Bets}</span>
                 </div>
-                <div className="w-full bg-muted rounded-full h-3">
-                  <div
-                    className="progress-bar-green h-3 rounded-full transition-all duration-700"
-                    style={{ width: `${player1Percentage}%` }}
-                  />
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="glow-text-green">Player Alpha</span>
+                    <span>{player1BetPercentage}% ({bets.player1Bets})</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-3">
+                    <div
+                      className="progress-bar-purple h-3 rounded-full transition-all duration-700"
+                      style={{ width: `${player1BetPercentage}%` }}
+                    />
+                  </div>
                 </div>
-              </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="glow-text-orange">Player Beta</span>
-                  <span>{player2Percentage}%</span>
-                </div>
-                <div className="w-full bg-muted rounded-full h-3">
-                  <div
-                    className="progress-bar-orange h-3 rounded-full transition-all duration-700"
-                    style={{ width: `${player2Percentage}%` }}
-                  />
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="glow-text-orange">Player Beta</span>
+                    <span>{player2BetPercentage}% ({bets.player2Bets})</span>
+                  </div>
+                  <div className="w-full bg-muted rounded-full h-3">
+                    <div
+                      className="progress-bar-purple h-3 rounded-full transition-all duration-700"
+                      style={{ width: `${player2BetPercentage}%` }}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
