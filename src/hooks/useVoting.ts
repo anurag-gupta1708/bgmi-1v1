@@ -1,156 +1,116 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from "react";
 
-interface VoteData {
-  player1Votes: number;
-  player2Votes: number;
-}
-
-interface BetData {
-  player1Bets: number;
-  player2Bets: number;
-}
+interface VoteData { player1Votes: number; player2Votes: number; }
+interface BetData { player1Bets: number; player2Bets: number; }
 
 interface UserVote {
   voterName: string;
-  votedFor: 'player1' | 'player2';
-  timestamp: number;
+  votedFor: "player1" | "player2";
+  timestamp: string | number;
 }
 
 interface UserBet {
   betterName: string;
   amount: number;
-  betOn: 'player1' | 'player2';
-  timestamp: number;
+  betOn: "player1" | "player2";
+  timestamp: string | number;
 }
+
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:4000/api";
 
 export const useVoting = () => {
   const [votes, setVotes] = useState<VoteData>({ player1Votes: 0, player2Votes: 0 });
   const [bets, setBets] = useState<BetData>({ player1Bets: 0, player2Bets: 0 });
-  const [hasVoted, setHasVoted] = useState<string | null>(null);
-  const [hasBet, setHasBet] = useState<string | null>(null);
-  const [voterName, setVoterName] = useState<string>('');
+
+  const [hasVoted, setHasVoted] = useState<"player1" | "player2" | null>(null);
+  const [hasBet, setHasBet] = useState<"player1" | "player2" | null>(null);
+
+  const [voterName, setVoterName] = useState<string>("");
   const [userVotes, setUserVotes] = useState<UserVote[]>([]);
   const [userBets, setUserBets] = useState<UserBet[]>([]);
 
-  // Load votes and bets from localStorage on mount
   useEffect(() => {
-    const savedVotes = localStorage.getItem('bgmi-votes');
-    const savedBets = localStorage.getItem('bgmi-bets');
-    const savedUserVote = localStorage.getItem('bgmi-user-vote');
-    const savedUserBet = localStorage.getItem('bgmi-user-bet');
-    const savedVoterName = localStorage.getItem('bgmi-voter-name');
-    const savedUserVotes = localStorage.getItem('bgmi-user-votes');
-    const savedUserBets = localStorage.getItem('bgmi-user-bets');
-    
-    if (savedVotes) {
-      setVotes(JSON.parse(savedVotes));
-    } else {
-      // Initialize with some sample votes
-      setVotes({ player1Votes: 0, player2Votes: 0 });
-    }
+    // purge legacy keys once
+    ["bgmi-votes","bgmi-bets","bgmi-user-vote","bgmi-user-bet","bgmi-user-votes","bgmi-user-bets"]
+      .forEach(k => localStorage.removeItem(k));
 
-    if (savedBets) {
-      setBets(JSON.parse(savedBets));
-    } else {
-      // Initialize with some sample bets
-      setBets({ player1Bets: 0, player2Bets: 0 });
-    }
-    
-    if (savedUserVote) {
-      setHasVoted(savedUserVote);
-    }
-
-    if (savedUserBet) {
-      setHasBet(savedUserBet);
-    }
-    
-    if (savedVoterName) {
-      setVoterName(savedVoterName);
-    }
-    
-    if (savedUserVotes) {
-      setUserVotes(JSON.parse(savedUserVotes));
-    }
-
-    if (savedUserBets) {
-      setUserBets(JSON.parse(savedUserBets));
-    }
+    const savedVoterName = localStorage.getItem("bgmi-voter-name") || "";
+    if (savedVoterName) setVoterName(savedVoterName);
+    refreshTotalsAndFeeds();
   }, []);
 
-  // Save votes to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem('bgmi-votes', JSON.stringify(votes));
-  }, [votes]);
+    if (!voterName) {
+      setHasVoted(null);
+      setHasBet(null);
+      return;
+    }
+    fetch(`${API_BASE}/users/${encodeURIComponent(voterName)}`)
+      .then(r => r.json())
+      .then(d => {
+        setHasVoted(d.hasVoted ?? null);
+        setHasBet(d.hasBet ?? null);
+      })
+      .catch(() => void 0);
+  }, [voterName]);
 
-  // Save bets to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('bgmi-bets', JSON.stringify(bets));
-  }, [bets]);
-
-  // Save user votes to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('bgmi-user-votes', JSON.stringify(userVotes));
-  }, [userVotes]);
-
-  // Save user bets to localStorage whenever they change
-  useEffect(() => {
-    localStorage.setItem('bgmi-user-bets', JSON.stringify(userBets));
-  }, [userBets]);
+  const refreshTotalsAndFeeds = async () => {
+    try {
+      const [vt, bt, vfeed, bfeed] = await Promise.all([
+        fetch(`${API_BASE}/votes/totals`).then(r => r.json()),
+        fetch(`${API_BASE}/bets/totals`).then(r => r.json()),
+        fetch(`${API_BASE}/votes/recent?limit=200`).then(r => r.json()),
+        fetch(`${API_BASE}/bets/recent?limit=200`).then(r => r.json()),
+      ]);
+      setVotes(vt);
+      setBets(bt);
+      setUserVotes(vfeed);
+      setUserBets(bfeed);
+    } catch {/* noop */}
+  };
 
   const setVoterNameAndSave = (name: string) => {
-    setVoterName(name);
-    localStorage.setItem('bgmi-voter-name', name);
+    const n = name.trim();
+    setVoterName(n);
+    localStorage.setItem("bgmi-voter-name", n);
   };
 
-  const vote = (player: 'player1' | 'player2') => {
-    if (hasVoted || !voterName) return; // Prevent double voting or voting without name
-
-    const newUserVote: UserVote = {
-      voterName,
-      votedFor: player,
-      timestamp: Date.now()
-    };
-
-    setVotes(prev => ({
-      ...prev,
-      [player === 'player1' ? 'player1Votes' : 'player2Votes']: 
-        prev[player === 'player1' ? 'player1Votes' : 'player2Votes'] + 1
-    }));
-
-    setUserVotes(prev => [...prev, newUserVote]);
-    setHasVoted(player);
-    localStorage.setItem('bgmi-user-vote', player);
+  const vote = async (player: "player1" | "player2") => {
+    if (hasVoted || !voterName) return;
+    const res = await fetch(`${API_BASE}/votes`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ voterName, votedFor: player }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setVotes(data.totals);
+      setHasVoted(player);
+      await refreshTotalsAndFeeds();
+    }
   };
 
-  const placeBet = (player: 'player1' | 'player2', amount: number) => {
-    if (hasBet || !voterName || amount <= 0) return; // Prevent double betting or betting without name
-
-    const newUserBet: UserBet = {
-      betterName: voterName,
-      amount,
-      betOn: player,
-      timestamp: Date.now()
-    };
-
-    setBets(prev => ({
-      ...prev,
-      [player === 'player1' ? 'player1Bets' : 'player2Bets']: 
-        prev[player === 'player1' ? 'player1Bets' : 'player2Bets'] + amount
-    }));
-
-    setUserBets(prev => [...prev, newUserBet]);
-    setHasBet(player);
-    localStorage.setItem('bgmi-user-bet', player);
+  const placeBet = async (player: "player1" | "player2", amount: number) => {
+    if (hasBet || !voterName || amount <= 0) return;
+    const res = await fetch(`${API_BASE}/bets`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ betterName: voterName, betOn: player, amount }),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      setBets(data.totals);
+      setHasBet(player);
+      await refreshTotalsAndFeeds();
+    }
   };
 
   const getTotalVotes = () => votes.player1Votes + votes.player2Votes;
   const getTotalBets = () => bets.player1Bets + bets.player2Bets;
-  
   const getPercentage = (playerVotes: number) => {
     const total = getTotalVotes();
     return total === 0 ? 0 : Math.round((playerVotes / total) * 100);
   };
-
   const getBettingPercentage = (playerBets: number) => {
     const total = getTotalBets();
     return total === 0 ? 0 : Math.round((playerBets / total) * 100);
