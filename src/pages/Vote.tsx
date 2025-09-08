@@ -4,8 +4,8 @@ import { toast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
-import player1Avatar from '@/assets/player1-avatar.jpg';
-import player2Avatar from '@/assets/player2-avatar.jpg';
+import player1Avatar from '@/assets/WhatsApp Image 2025-09-08 at 15.03.01_a69b9162.jpg';
+import player2Avatar from '@/assets/WhatsApp Image 2025-09-08 at 15.03.01_6f972a29.jpg';
 
 const Vote = () => {
   const { votes, bets, hasVoted, hasBet, voterName, vote, placeBet, setVoterNameAndSave, getPercentage, getBettingPercentage } = useVoting();
@@ -129,7 +129,7 @@ const Vote = () => {
             <span className="text-foreground">CHAMPION</span>
           </h1>
           <p className="text-xl text-muted-foreground font-rajdhani">
-            Cast your vote for the ultimate BGMI champion
+            satta lagao paisa kamao🤑🤑
           </p>
           <div className="space-y-2">
             <div className="inline-block bg-primary/20 text-primary px-4 py-2 rounded-lg border border-primary/30">
@@ -156,7 +156,7 @@ const Vote = () => {
                 <span className="glow-text-purple">PLACE YOUR BET</span>
               </h3>
               <p className="text-center text-muted-foreground mb-6 font-rajdhani">
-                Show your confidence! Bet on your favorite player
+                Show your confidence! Bet on your favorite bell
               </p>
               
               <div className="space-y-4">
@@ -178,7 +178,7 @@ const Vote = () => {
                     className="gaming-button-green font-orbitron font-bold py-3"
                     size="lg"
                   >
-                    💰 BET ON ALPHA
+                    💰 BET ON Dhol
                   </Button>
                   <Button
                     onClick={() => handleBet('player2')}
@@ -186,7 +186,7 @@ const Vote = () => {
                     className="gaming-button-orange font-orbitron font-bold py-3"
                     size="lg"
                   >
-                    💰 BET ON BETA
+                    💰 BET ON Yeti
                   </Button>
                 </div>
               </div>
@@ -197,7 +197,7 @@ const Vote = () => {
         {/* Voting Cards */}
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           <PlayerCard
-            name="Player Alpha"
+            name="Player Dhol"
             image={player1Avatar}
             votes={votes.player1Votes}
             percentage={player1Percentage}
@@ -208,7 +208,7 @@ const Vote = () => {
           />
           
           <PlayerCard
-            name="Player Beta"
+            name="Player Yeti"
             image={player2Avatar}
             votes={votes.player2Votes}
             percentage={player2Percentage}
@@ -235,7 +235,7 @@ const Vote = () => {
                 
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="glow-text-green">Player Alpha</span>
+                    <span className="glow-text-green">Dhol</span>
                     <span>{player1Percentage}%</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-3">
@@ -248,7 +248,7 @@ const Vote = () => {
                 
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="glow-text-orange">Player Beta</span>
+                    <span className="glow-text-orange">Yeti</span>
                     <span>{player2Percentage}%</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-3">
@@ -270,7 +270,7 @@ const Vote = () => {
                 
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="glow-text-green">Player Alpha</span>
+                    <span className="glow-text-green">Dhol pr etna laga </span>
                     <span>{player1BetPercentage}% ({bets.player1Bets})</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-3">
@@ -283,7 +283,7 @@ const Vote = () => {
                 
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="glow-text-orange">Player Beta</span>
+                    <span className="glow-text-orange">Yeti pr etna laga </span>
                     <span>{player2BetPercentage}% ({bets.player2Bets})</span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-3">

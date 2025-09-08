@@ -1,7 +1,7 @@
 import { useVoting } from '@/hooks/useVoting';
 import { Trophy, TrendingUp, Users, Target } from 'lucide-react';
-import player1Avatar from '@/assets/player1-avatar.jpg';
-import player2Avatar from '@/assets/player2-avatar.jpg';
+import player1Avatar from '@/assets/WhatsApp Image 2025-09-08 at 15.03.01_a69b9162.jpg';
+import player2Avatar from '@/assets/WhatsApp Image 2025-09-08 at 15.03.01_6f972a29.jpg';
 
 const Results = () => {
   const { votes, bets, getTotalVotes, getTotalBets, getPercentage, getBettingPercentage } = useVoting();
@@ -28,7 +28,9 @@ const Results = () => {
             <span className="glow-text-orange">RESULTS</span>
           </h1>
           <p className="text-xl text-muted-foreground font-rajdhani">
-            Real-time battle statistics and leaderboard
+            aapne jo satta lagya hai uske liye dhanyvad
+            vote ki MC usse kisi ko ganta fark nhi parta 
+            main vote chori kr lunga😂😂
           </p>
         </div>
 
@@ -80,7 +82,7 @@ const Results = () => {
               <div className="relative">
                 <img 
                   src={player1Avatar} 
-                  alt="Player Alpha" 
+                  alt="Dhol" 
                   className="w-16 h-16 rounded-full border-2 border-primary"
                 />
                 {isPlayer1Winning && !isTied && (
@@ -90,8 +92,8 @@ const Results = () => {
                 )}
               </div>
               <div>
-                <h3 className="font-orbitron font-bold text-xl glow-text-green">Player Alpha</h3>
-                <p className="text-muted-foreground text-sm">Strategic Mastermind</p>
+                <h3 className="font-orbitron font-bold text-xl glow-text-green">Dhol</h3>
+                <p className="text-muted-foreground text-sm">boobies vala</p>
               </div>
             </div>
             
@@ -144,7 +146,7 @@ const Results = () => {
               <div className="relative">
                 <img 
                   src={player2Avatar} 
-                  alt="Player Beta" 
+                  alt="yeti" 
                   className="w-16 h-16 rounded-full border-2 border-secondary"
                 />
                 {!isPlayer1Winning && !isTied && (
@@ -154,8 +156,8 @@ const Results = () => {
                 )}
               </div>
               <div>
-                <h3 className="font-orbitron font-bold text-xl glow-text-orange">Player Beta</h3>
-                <p className="text-muted-foreground text-sm">Lightning Fighter</p>
+                <h3 className="font-orbitron font-bold text-xl glow-text-orange">Yeti</h3>
+                <p className="text-muted-foreground text-sm">chuche vala</p>
               </div>
             </div>
             

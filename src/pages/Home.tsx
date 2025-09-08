@@ -20,8 +20,8 @@ const Home = () => {
           </div>
           
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-rajdhani">
-            The ultimate showdown between two legendary BGMI players. 
-            Cast your vote and help decide who rules the battleground!
+            DO Bello ke bech me ho rha h 1v1 
+            aapko satta lagna hai kon jete ga 
           </p>
           
           <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
@@ -45,7 +45,7 @@ const Home = () => {
           <div className="gaming-card p-8 max-w-md mx-auto">
             <h3 className="font-orbitron font-bold text-2xl mb-4">Ready to Vote?</h3>
             <p className="text-muted-foreground mb-6 font-rajdhani">
-              Choose your champion and join the battle. Every vote counts in this epic showdown!
+              Choose your champion and join the battle. Ye bss bolne ki baat hai dono sale dhol he hai
             </p>
             
             <div className="space-y-4">
@@ -70,9 +70,9 @@ const Home = () => {
         <div className="mt-16 grid md:grid-cols-3 gap-8 items-center">
           <div className="gaming-card p-6 text-center">
             <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary/20 flex items-center justify-center">
-              <span className="text-3xl">🎮</span>
+              <span className="text-3xl">🥁</span>
             </div>
-            <h4 className="font-orbitron font-bold text-lg mb-2">Player Alpha</h4>
+            <h4 className="font-orbitron font-bold text-lg mb-2">Dhol</h4>
             <p className="text-muted-foreground text-sm">
               Strategic mastermind with incredible aim
             </p>
@@ -85,9 +85,9 @@ const Home = () => {
           
           <div className="gaming-card p-6 text-center">
             <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-secondary/20 flex items-center justify-center">
-              <span className="text-3xl">🔥</span>
+              <span className="text-3xl">🐻‍❄️</span>
             </div>
-            <h4 className="font-orbitron font-bold text-lg mb-2">Player Beta</h4>
+            <h4 className="font-orbitron font-bold text-lg mb-2">Yeti</h4>
             <p className="text-muted-foreground text-sm">
               Aggressive fighter with lightning reflexes
             </p>
