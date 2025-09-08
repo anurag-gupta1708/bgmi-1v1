@@ -1,11 +1,31 @@
 import { useVoting } from '@/hooks/useVoting';
 import PlayerCard from '@/components/PlayerCard';
 import { toast } from '@/hooks/use-toast';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
 import player1Avatar from '@/assets/player1-avatar.jpg';
 import player2Avatar from '@/assets/player2-avatar.jpg';
 
 const Vote = () => {
-  const { votes, hasVoted, vote, getPercentage } = useVoting();
+  const { votes, hasVoted, voterName, vote, setVoterNameAndSave, getPercentage } = useVoting();
+  const [tempName, setTempName] = useState('');
+
+  const handleNameSubmit = () => {
+    if (!tempName.trim()) {
+      toast({
+        title: "Name Required!",
+        description: "Please enter your name to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+    setVoterNameAndSave(tempName.trim());
+    toast({
+      title: "Welcome!",
+      description: `Hello ${tempName.trim()}, you can now cast your vote.`,
+    });
+  };
 
   const handleVote = (player: 'player1' | 'player2') => {
     if (hasVoted) {
@@ -27,6 +47,45 @@ const Vote = () => {
   const player1Percentage = getPercentage(votes.player1Votes);
   const player2Percentage = getPercentage(votes.player2Votes);
 
+  // If no voter name is set, show name input form
+  if (!voterName) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex items-center justify-center">
+        <div className="container mx-auto px-4">
+          <div className="max-w-md mx-auto">
+            <div className="gaming-card p-8 text-center space-y-6">
+              <h1 className="font-orbitron font-black text-3xl">
+                <span className="glow-text-green">IDENTIFY</span>{' '}
+                <span className="glow-text-orange">YOURSELF</span>
+              </h1>
+              <p className="text-muted-foreground font-rajdhani text-lg">
+                Enter your name to cast your vote in this epic BGMI battle
+              </p>
+              
+              <div className="space-y-4">
+                <Input
+                  type="text"
+                  placeholder="Your name..."
+                  value={tempName}
+                  onChange={(e) => setTempName(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleNameSubmit()}
+                  className="text-center font-rajdhani text-lg"
+                />
+                <Button
+                  onClick={handleNameSubmit}
+                  className="w-full gaming-button-green font-orbitron font-bold py-3"
+                  size="lg"
+                >
+                  ENTER BATTLE
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
       <div className="container mx-auto px-4 py-12">
@@ -40,11 +99,16 @@ const Vote = () => {
           <p className="text-xl text-muted-foreground font-rajdhani">
             Cast your vote for the ultimate BGMI champion
           </p>
-          {hasVoted && (
+          <div className="space-y-2">
             <div className="inline-block bg-primary/20 text-primary px-4 py-2 rounded-lg border border-primary/30">
-              ✓ You voted for {hasVoted === 'player1' ? 'Player Alpha' : 'Player Beta'}
+              👤 Voting as: <strong>{voterName}</strong>
             </div>
-          )}
+            {hasVoted && (
+              <div className="block bg-green-500/20 text-green-400 px-4 py-2 rounded-lg border border-green-500/30">
+                ✓ You voted for {hasVoted === 'player1' ? 'Player Alpha' : 'Player Beta'}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Voting Cards */}
